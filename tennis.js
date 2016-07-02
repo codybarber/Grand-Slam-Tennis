@@ -17,7 +17,7 @@ var wimbledon = '#02AC1E';
 var usOpen = '#23D';
 
 //Racket and Ball colors
-var racket = '#606060';
+var racketColor = '#606060';
 var tennisBall = '#B1FF1E';
 
 
@@ -26,7 +26,7 @@ function roundedRectangle(ctx, x, y, width, height, radius, fill, stroke) {
     stroke = true;
   }
   if (typeof radius === 'undefined') {
-    radius = 15;
+    radius = 5;
   }
   ctx.beginPath();
   ctx.moveTo(x + radius, y);
@@ -77,7 +77,7 @@ Racket.prototype.move = function(x, y) {
     this.x = 0;
     this.xSpeed = 0;
   } else if (this.x + this.width > courtWidth) {
-    this.x = courtWidth = this.width;
+    this.x = courtWidth - this.width;
     this.xSpeed = 0;
   }
 };
@@ -86,7 +86,7 @@ Racket.prototype.move = function(x, y) {
 function Computer() {
   this.score = 0;
   var racketX = (courtWidth / 2) - (racketWidth / 2);
-  var racketY = 0;
+  var racketY = 10;
   this.racket = new Racket(racketX, racketY);
 }
 Computer.prototype.render = function (ctx) {
@@ -101,7 +101,7 @@ Computer.prototype.update = function (ball) {
   if (diff < 0 && diff < -4) {
     diff = -5;
   } else if (diff > 0 && diff > 4) {
-    doff = 5;
+    diff = 5;
   }
   //Sets difficulty
   this.racket.move(diff * randomization(difficulty, 1), 0);
@@ -116,7 +116,7 @@ Computer.prototype.update = function (ball) {
 function Player() {
   this.score = 0;
   var racketX = (courtWidth / 2) - (racketWidth / 2);
-  var racketY = courtHeight - 20;
+  var racketY = courtHeight - 40;
   this.racket = new Racket(racketX, racketY);
 }
 
@@ -141,7 +141,7 @@ Player.prototype.update = function (keysDown) {
 
 //Ball Physics
 function Ball(x, y, speedX, speedY, rad) {
-  this.radius = rad || 15;
+  this.radius = rad || 5;
   this.defaultXPosition = function () {
     return typeof x === 'undefined' ? courtWidth / 2 : x;
   };
@@ -155,8 +155,8 @@ function Ball(x, y, speedX, speedY, rad) {
     return typeof speedY === 'undefined' ? 3 : speedY;
   };
   this.resetSpeed = function() {
-    this.x = this.defaultXSpeed();
-    this.y = this.defaultYSpeed();
+    this.xSpeed = this.defaultXSpeed();
+    this.ySpeed = this.defaultYSpeed();
   };
   this.resetPosition = function() {
     this.x = this.defaultXPosition();
@@ -187,7 +187,7 @@ Ball.prototype.update = function(playerBottom, playerTop) {
   var racketTop = playerTop.racket;
 
   var ballLeftWall = this.x - this.radius < 0;
-  var ballRightWall = this.x - this.radius > courtWidth;
+  var ballRightWall = this.x + this.radius > courtWidth;
   if (ballLeftWall) {
     this.x = this.radius;
     this.xSpeed = -this.xSpeed;
@@ -212,7 +212,7 @@ Ball.prototype.update = function(playerBottom, playerTop) {
   //Below determines how much to change the ball speed.
   var ballInBottom = topY > (courtHeight * 0.75);
   if (ballInBottom) {
-    var bottomRacketYArea = racketBottom.y + raacketBottom.height;
+    var bottomRacketYArea = racketBottom.y + racketBottom.height;
     var ballTopIsUnderBottomRacket = topY < bottomRacketYArea;
     var ballBottomIsAboveBottomRacket = bottomY > racketBottom.y;
     var ballYOverlapsBottomRacket = ballTopIsUnderBottomRacket && ballBottomIsAboveBottomRacket;
@@ -223,7 +223,7 @@ Ball.prototype.update = function(playerBottom, playerTop) {
     var ballHitBottomRacket = ballYOverlapsBottomRacket && ballXOverlapsBottomRacket;
 
     if (ballHitBottomRacket) {
-      this.ySpeed = randomOffset(-(Math.abs(racketBottom.xSpeed || 4)), -0.9 * Math.abs(racketBottom.xSpeed || 4));
+      this.ySpeed = randomization(-(Math.abs(racketBottom.xSpeed || 4)), -0.9 * Math.abs(racketBottom.xSpeed || 4));
       this.xSpeed += (racketBottom.xSpeed / 2);
       this.y += this.ySpeed;
     }
@@ -258,7 +258,7 @@ function Tennis(appendToElementId, window, document) {
   canvas.style.border = '2px solid ' + frenchOpen;
 
   var context = canvas.getContext('2d');
-  context.fillStyle = racket;
+  context.fillStyle = tennisBall;
   context.font = "18px sans-serif";
 
   var player = new Player();
@@ -269,7 +269,7 @@ function Tennis(appendToElementId, window, document) {
   function render() {
     context.fillStyle = frenchOpen;
     context.fillRect(0, 0, canvas.width, canvas.height);
-    context.fillStyle = racket;
+    context.fillStyle = racketColor;
     player.render(context);
     computer.render(context);
     ball.render(context);
