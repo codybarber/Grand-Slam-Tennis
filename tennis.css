@@ -1,0 +1,16 @@
+#match {
+  text-align: center;
+}
+
+body {
+  background-image: url(images/pool_table.png);
+}
+
+.header {
+  text-align: center;
+  margin: 30px;
+  color: white;
+  font-family: 'Candal', sans-serif;
+  font-size: 3em;
+  text-shadow: 3px 3px 3px black;
+}

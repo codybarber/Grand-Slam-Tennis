@@ -20,7 +20,7 @@ var wimbledon = '#02AC1E';
 var usOpen = '#23D';
 
 //Racket and Ball colors
-var racketColor = '#D1E5E1';
+var racketColor = '#bbc';
 var tennisBall = '#B1FF1E';
 
 
@@ -94,7 +94,7 @@ function Computer() {
 }
 Computer.prototype.render = function (ctx) {
   this.racket.render(ctx);
-  ctx.fillText(this.score.toString(), 5, 30);
+  ctx.fillText(this.score.toString(), 15, 50);
 };
 
 //Computer racket moves with the position of ball, with a possibility of error
@@ -125,7 +125,7 @@ function Player() {
 
 Player.prototype.render = function (ctx) {
   this.racket.render(ctx);
-  ctx.fillText(this.score.toString(), 5, courtHeight - 30);
+  ctx.fillText(this.score.toString(), 15, courtHeight - 50);
 };
 
 Player.prototype.update = function (keysDown) {
@@ -284,11 +284,13 @@ function Tennis(appendToElementId, window, document) {
 
   function render() {
     ctx.drawImage(background, 0, 0);
-    ctx.fillStyle = tennisBall;
+    ctx.fillStyle = racketColor;
     player.render(ctx);
     computer.render(ctx);
+    ctx.fillStyle = tennisBall;
     ball.render(ctx);
   }
+
 
   function update() {
     player.update(keysDown);
