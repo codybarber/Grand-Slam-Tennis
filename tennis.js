@@ -4,13 +4,16 @@ var difficulty = 0.1;
 //Court layout
 var courtWidth = 500;
 var courtHeight = 600;
-var racketWidth = 100;
+var racketWidth = 80;
 
 //Key assignments
 var moveLeft = 37;
 var moveRight = 39;
 
 //Court colors for different Majors
+var background = new Image();
+background.src = 'images/usOpen.png';
+
 var australianOpen = '#1D1075';
 var frenchOpen = '#B42';
 var wimbledon = '#02AC1E';
@@ -26,7 +29,7 @@ function roundedRectangle(ctx, x, y, width, height, radius, fill, stroke) {
     stroke = true;
   }
   if (typeof radius === 'undefined') {
-    radius = 5;
+    radius = 10;
   }
   ctx.beginPath();
   ctx.moveTo(x + radius, y);
@@ -55,7 +58,7 @@ function randomization(min, max) {
 //Racket function
 function Racket(x, y) {
   this.width = racketWidth;
-  this.height = 20;
+  this.height = 18;
 
   this.x = x;
   this.y = y;
@@ -65,7 +68,7 @@ function Racket(x, y) {
 
 //Drawing racket on the court
 Racket.prototype.render = function (ctx) {
-  roundedRectangle(ctx, this.x, this.y, this.width, this.height, 15, true, null);
+  roundedRectangle(ctx, this.x, this.y, this.width, this.height, 10, true, null);
 };
 
 Racket.prototype.move = function(x, y) {
@@ -86,7 +89,7 @@ Racket.prototype.move = function(x, y) {
 function Computer() {
   this.score = 0;
   var racketX = (courtWidth / 2) - (racketWidth / 2);
-  var racketY = 10;
+  var racketY = 12;
   this.racket = new Racket(racketX, racketY);
 }
 Computer.prototype.render = function (ctx) {
@@ -198,16 +201,28 @@ Ball.prototype.update = function(playerBottom, playerTop) {
 
   //Resets ball to center of court after someone scores
   var bottomScored = this.y < 0;
-  var topScored = this.y > 900;
+  var topScored = this.y > 600;
   if (bottomScored || topScored) {
     if (bottomScored) {
-      playerBottom.score++;
+      if (playerBottom.score === 40) {
+        playerBottom.score = playerBottom.score - 40;
+      } else if (playerBottom.score === 30) {
+        playerBottom.score = playerBottom.score + 10;
+      } else if (playerBottom.score === 0 || 15) {
+        playerBottom.score = playerBottom.score + 15;
+      }
     }
     if (topScored) {
-      playerTop.score++;
+      if (playerTop.score === 40) {
+        playerTop.score = playerTop.score - 40;
+      } else if (playerTop.score === 30) {
+        playerTop.score = playerTop.score + 10;
+      } else if (playerTop.score === 0 || 15) {
+        playerTop.score = playerTop.score + 15;
     }
-    this.reset();
   }
+  this.reset();
+}
 
   //Below determines how much to change the ball speed.
   var ballInBottom = topY > (courtHeight * 0.75);
@@ -244,22 +259,23 @@ Ball.prototype.update = function(playerBottom, playerTop) {
   }
 };
 
+
 //Function to put the court into the html
 function Tennis(appendToElementId, window, document) {
   var el = document.getElementById(appendToElementId);
-  var animate = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function (callbackl) {
+  var animate = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function (callback) {
     window.setTimeout(callback, 1000 / 60);
   };
 
   var canvas = document.createElement("canvas");
   canvas.width = courtWidth;
   canvas.height = courtHeight;
-  canvas.style.borderRadius = '10px';
-  canvas.style.border = '2px solid ' + frenchOpen;
+  canvas.style.borderRadius = '6px';
+  canvas.style.border = '2px solid black';
 
-  var context = canvas.getContext('2d');
-  context.fillStyle = tennisBall;
-  context.font = "18px sans-serif";
+  var ctx = canvas.getContext('2d');
+  ctx.fillStyle = racketColor;
+  ctx.font = "18px sans-serif";
 
   var player = new Player();
   var computer = new Computer();
@@ -267,12 +283,11 @@ function Tennis(appendToElementId, window, document) {
   var keysDown = {};
 
   function render() {
-    context.fillStyle = frenchOpen;
-    context.fillRect(0, 0, canvas.width, canvas.height);
-    context.fillStyle = racketColor;
-    player.render(context);
-    computer.render(context);
-    ball.render(context);
+    ctx.drawImage(background, 0, 0);
+    ctx.fillStyle = tennisBall;
+    player.render(ctx);
+    computer.render(ctx);
+    ball.render(ctx);
   }
 
   function update() {
@@ -283,7 +298,7 @@ function Tennis(appendToElementId, window, document) {
 
   function step() {
     update();
-    render(context);
+    render(ctx);
     animate(step);
   }
 
