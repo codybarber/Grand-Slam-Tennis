@@ -2,8 +2,8 @@
 var difficulty = 0.1;
 
 //Court layout
-var courtWidth = 300;
-var courtHeight = 400;
+var courtWidth = 500;
+var courtHeight = 600;
 var racketWidth = 100;
 
 //Key assignments
@@ -17,7 +17,7 @@ var wimbledon = '#02AC1E';
 var usOpen = '#23D';
 
 //Racket and Ball colors
-var racketColor = '#606060';
+var racketColor = '#D1E5E1';
 var tennisBall = '#B1FF1E';
 
 
@@ -55,7 +55,7 @@ function randomization(min, max) {
 //Racket function
 function Racket(x, y) {
   this.width = racketWidth;
-  this.height = 30;
+  this.height = 20;
 
   this.x = x;
   this.y = y;
@@ -116,7 +116,7 @@ Computer.prototype.update = function (ball) {
 function Player() {
   this.score = 0;
   var racketX = (courtWidth / 2) - (racketWidth / 2);
-  var racketY = courtHeight - 40;
+  var racketY = courtHeight - 30;
   this.racket = new Racket(racketX, racketY);
 }
 
@@ -254,7 +254,7 @@ function Tennis(appendToElementId, window, document) {
   var canvas = document.createElement("canvas");
   canvas.width = courtWidth;
   canvas.height = courtHeight;
-  canvas.style.borderRadius = '15px';
+  canvas.style.borderRadius = '10px';
   canvas.style.border = '2px solid ' + frenchOpen;
 
   var context = canvas.getContext('2d');
