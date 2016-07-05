@@ -8,7 +8,8 @@ body {
 
 .header {
   text-align: center;
-  margin: 30px;
+  margin-top: -40px;
+  margin-bottom: -40px;
   color: white;
   font-family: 'Candal', sans-serif;
   font-size: 3em;

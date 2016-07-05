@@ -12,7 +12,7 @@ var moveRight = 39;
 
 //Court colors for different Majors
 var background = new Image();
-background.src = 'images/usOpen.png';
+background.src = 'images/wimbledon.png';
 
 var australianOpen = '#1D1075';
 var frenchOpen = '#B42';
